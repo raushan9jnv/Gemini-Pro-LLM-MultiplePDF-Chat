@@ -73,9 +73,31 @@ def user_input(user_question):
     st.write("Reply: ", response["output_text"])
 
 # Main function
+# def main():
+#     st.set_page_config("Chat With Multiple PDF")
+#     st.header("Chat with Multiple PDF using Gemini")
+
+#     user_question = st.text_input("Ask a Question from the PDF Files")
+
+#     if user_question:
+#         user_input(user_question)
+
+#     with st.sidebar:
+#         st.title("Menu:")
+#         pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
+#         if st.button("Submit & Process"):
+#             with st.spinner("Processing..."):
+#                 raw_text = get_pdf_text(pdf_docs)
+#                 text_chunks = get_text_chunks(raw_text)
+#                 get_vector_store(text_chunks)
+#                 st.success("Done")
 def main():
     st.set_page_config("Chat With Multiple PDF")
-    st.header("Chat with Multiple PDF using Gemini")
+    st.title("Chat with Multiple PDF using Gemini")
+    st.header("How To Use this App")
+    st.write("1. Upload your PDF files using the file uploader.")
+    st.write("2. Ask a question related to the uploaded PDF files.")
+    st.write("3. Click on the 'Submit & Process' button to process the PDF files and get the answer to your question.")
 
     user_question = st.text_input("Ask a Question from the PDF Files")
 
@@ -84,6 +106,7 @@ def main():
 
     with st.sidebar:
         st.title("Menu:")
+    
         pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
         if st.button("Submit & Process"):
             with st.spinner("Processing..."):
@@ -91,6 +114,8 @@ def main():
                 text_chunks = get_text_chunks(raw_text)
                 get_vector_store(text_chunks)
                 st.success("Done")
+
+    st.write("Created with ❤️ by [Raushan Kumar](https://github.com/raushan9jnv)")
 
 if __name__ == "__main__":
     main()
