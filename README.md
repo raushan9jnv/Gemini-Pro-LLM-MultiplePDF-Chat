@@ -5,6 +5,13 @@ This project allows you to chat with multiple PDF files using the Google Generat
 ## App Link
 https://chat-withyour-pdf-raushan.streamlit.app/
 
+## Demo
+[Click here](https://github.com/raushan9jnv/Gemini-Pro-LLM-MultiplePDF-Chat/assets/86125144/3587d567-f476-4cf0-9ce7-465c77aa5edd) to view a demo of the app.
+
+
+https://github.com/raushan9jnv/Gemini-Pro-LLM-MultiplePDF-Chat/assets/86125144/3587d567-f476-4cf0-9ce7-465c77aa5edd
+
+
 ## Usage
 
     1. Upload your PDF files using the file uploader.
