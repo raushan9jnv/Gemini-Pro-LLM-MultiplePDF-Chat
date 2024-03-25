@@ -1,1 +1,3 @@
 apikey.py
+faiss_index/
+.env
