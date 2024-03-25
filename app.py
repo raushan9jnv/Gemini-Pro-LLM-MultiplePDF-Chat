@@ -15,9 +15,13 @@ from langchain.chains.question_answering import load_qa_chain  # Loading questio
 from langchain.prompts import PromptTemplate  # Template for prompts
 from dotenv import load_dotenv  # Loading environment variables
 
-# Load environment variables
-load_dotenv()
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+# # For local Load environment variables
+# load_dotenv()
+# genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+
+# For Streamlit Deployement Load environment variables
+genai_api_key = st.secrets["GOOGLE_API_KEY"]
+genai.configure(api_key=genai_api_key)
 
 # Function to extract text from PDF files
 def get_pdf_text(pdf_docs):
