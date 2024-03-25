@@ -2,6 +2,8 @@
 
 This project allows you to chat with multiple PDF files using the Google Generative AI model Gemini. You can upload your PDF files, ask questions related to the content of the PDFs, and get answers based on the information in the PDFs.
 
+## App Link
+https://chat-withyour-pdf-raushan.streamlit.app/
 
 ## Usage
 
@@ -9,7 +11,8 @@ This project allows you to chat with multiple PDF files using the Google Generat
     2. Ask a question related to the uploaded PDF files.
     3. Click on the "Submit & Process" button to process the PDF files and get the answer to your question.
 
-![image](https://github.com/raushan9jnv/Gemini-Pro-LLM-MultiplePDF-Chat/assets/86125144/b7cf2c81-f374-4f58-ab64-b9e6eeb907d7)
+![image](https://github.com/raushan9jnv/Gemini-Pro-LLM-MultiplePDF-Chat/assets/86125144/68854cdd-ff35-4684-8a43-e12b17ae25e0)
+
 
     
 ## Tools and Libraries Used
