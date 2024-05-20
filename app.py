@@ -1,20 +1,18 @@
-# Import necessary libraries
-import streamlit as st  # Streamlit library for building web apps
-from PyPDF2 import PdfReader  # Library for reading PDF files
-from pptx import Presentation  # Library for reading PPTX files
-from langchain.text_splitter import RecursiveCharacterTextSplitter  # Text splitting utility
-import os  # Operating system utilities
+import streamlit as st
+from PyPDF2 import PdfReader
+from pptx import Presentation
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+import os
+import asyncio
 
-# Import from langchain_google_genai module
-from langchain_google_genai import GoogleGenerativeAIEmbeddings  # Embeddings for Google Generative AI
-import google.generativeai as genai  # Google Generative AI library
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
+import google.generativeai as genai
 
-# Import from langchain module
-from langchain.vectorstores import FAISS  # Vector embeddings
-from langchain_google_genai import ChatGoogleGenerativeAI  # Google Generative AI chat
-from langchain.chains.question_answering import load_qa_chain  # Loading question answering chain
-from langchain.prompts import PromptTemplate  # Template for prompts
-from dotenv import load_dotenv  # Loading environment variables
+from langchain.vectorstores import FAISS
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain.chains.question_answering import load_qa_chain
+from langchain.prompts import PromptTemplate
+from dotenv import load_dotenv
 
 # For Streamlit Deployement Load environment variables
 genai_api_key = st.secrets["GOOGLE_API_KEY"]
@@ -53,7 +51,7 @@ def get_vector_store(text_chunks):
     vector_store.save_local("faiss_index")
 
 # Function to create conversational chain
-def get_conversational_chain():
+async def get_conversational_chain():
     prompt_template = """
     Answer the question as detailed as possible from the provided context, make sure to provide all the details, 
     if the answer is not in the provided context just say,"answer is not available in the context", 
@@ -63,19 +61,18 @@ def get_conversational_chain():
 
     Answer:
     """
-    # Load gemini pro model
     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.3)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
 
 # Function to handle user input
-def user_input(user_question):
+async def user_input(user_question):
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(user_question)
 
-    chain = get_conversational_chain()
+    chain = await get_conversational_chain()
 
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
     st.write("Reply: ", response["output_text"])
@@ -92,7 +89,7 @@ def main():
     user_question = st.text_input("Ask a Question from the Files")
 
     if user_question:
-        user_input(user_question)
+        asyncio.run(user_input(user_question))
 
     with st.sidebar:
         st.title("Menu:")
