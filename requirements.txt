@@ -1,9 +1,9 @@
 streamlit
 google-generativeai
-python-dotenv==0.21.0
-langchain==0.0.45
+python-dotenv
+langchain
 PyPDF2
 chromadb
-faiss-cpu==1.7.2
+faiss-cpu
 langchain_google_genai
-python-pptx==0.6.21
+python-pptx
