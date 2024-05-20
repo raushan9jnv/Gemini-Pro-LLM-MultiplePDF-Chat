@@ -1,6 +1,7 @@
 # Import necessary libraries
 import streamlit as st  # Streamlit library for building web apps
 from PyPDF2 import PdfReader  # Library for reading PDF files
+from pptx import Presentation  # Library for reading PPTX files
 from langchain.text_splitter import RecursiveCharacterTextSplitter  # Text splitting utility
 import os  # Operating system utilities
 
@@ -15,10 +16,6 @@ from langchain.chains.question_answering import load_qa_chain  # Loading questio
 from langchain.prompts import PromptTemplate  # Template for prompts
 from dotenv import load_dotenv  # Loading environment variables
 
-# # For local Load environment variables
-# load_dotenv()
-# genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
-
 # For Streamlit Deployement Load environment variables
 genai_api_key = st.secrets["GOOGLE_API_KEY"]
 genai.configure(api_key=genai_api_key)
@@ -30,6 +27,17 @@ def get_pdf_text(pdf_docs):
         pdf_reader = PdfReader(pdf)
         for page in pdf_reader.pages:
             text += page.extract_text()
+    return text
+
+# Function to extract text from PPTX files
+def get_pptx_text(pptx_docs):
+    text = ""
+    for pptx in pptx_docs:
+        presentation = Presentation(pptx)
+        for slide in presentation.slides:
+            for shape in slide.shapes:
+                if hasattr(shape, "text"):
+                    text += shape.text + "\n"
     return text
 
 # Function to split text into chunks
@@ -73,33 +81,15 @@ def user_input(user_question):
     st.write("Reply: ", response["output_text"])
 
 # Main function
-# def main():
-#     st.set_page_config("Chat With Multiple PDF")
-#     st.header("Chat with Multiple PDF using Gemini")
-
-#     user_question = st.text_input("Ask a Question from the PDF Files")
-
-#     if user_question:
-#         user_input(user_question)
-
-#     with st.sidebar:
-#         st.title("Menu:")
-#         pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
-#         if st.button("Submit & Process"):
-#             with st.spinner("Processing..."):
-#                 raw_text = get_pdf_text(pdf_docs)
-#                 text_chunks = get_text_chunks(raw_text)
-#                 get_vector_store(text_chunks)
-#                 st.success("Done")
 def main():
-    st.set_page_config("Chat With Multiple PDF")
-    st.title("Chat with Multiple PDF using Gemini")
+    st.set_page_config("Chat With Multiple PDF and PPTX")
+    st.title("Chat with Multiple PDF and PPTX using Gemini")
     st.header("How To Use this App")
-    st.write("1. Upload your PDF files using the file uploader.")
-    st.write("2. Ask a question related to the uploaded PDF files.")
-    st.write("3. Click on the 'Submit & Process' button to process the PDF files and get the answer to your question.")
+    st.write("1. Upload your PDF and PPTX files using the file uploader.")
+    st.write("2. Ask a question related to the uploaded files.")
+    st.write("3. Click on the 'Submit & Process' button to process the files and get the answer to your question.")
 
-    user_question = st.text_input("Ask a Question from the PDF Files")
+    user_question = st.text_input("Ask a Question from the Files")
 
     if user_question:
         user_input(user_question)
@@ -107,10 +97,13 @@ def main():
     with st.sidebar:
         st.title("Menu:")
     
-        pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit & Process Button", accept_multiple_files=True)
+        uploaded_files = st.file_uploader("Upload your PDF and PPTX Files and Click on the Submit & Process Button", accept_multiple_files=True, type=["pdf", "pptx"])
         if st.button("Submit & Process"):
             with st.spinner("Processing..."):
-                raw_text = get_pdf_text(pdf_docs)
+                pdf_files = [file for file in uploaded_files if file.type == "application/pdf"]
+                pptx_files = [file for file in uploaded_files if file.type == "application/vnd.openxmlformats-officedocument.presentationml.presentation"]
+                
+                raw_text = get_pdf_text(pdf_files) + get_pptx_text(pptx_files)
                 text_chunks = get_text_chunks(raw_text)
                 get_vector_store(text_chunks)
                 st.success("Done")
